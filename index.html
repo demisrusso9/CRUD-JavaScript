@@ -5,23 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD JavaScript</title>
-    <link rel="stylesheet" href="style.css">    
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="page-header">                
-        <input class="input" type="text" placeholder="Descrição">
+    <div class="page-header">
+        <input class="input description" type="text" placeholder="Descrição" autofocus>
         
-        <button class="btn add save">Adicionar</button>        
-        <button class="btn local update">Dados salvos</button>
-        <button class="btn delete">Excluir dados Salvos</button>
-        
-        <button class="btn dark">Modo Escuro</button>        
+        <button class="btn save">Adicionar</button>        
+        <button class="btn delete">Excluir dados</button>        
+        <button class="btn dark">Modo Escuro</button>
     </div>
 
-    <div class="list"></div>    
+    <div class="search-box">
+        <input class="input search" type="text" placeholder="Buscar">
+    </div>
 
-    <script src="index.js"></script>        
+    <div class="list"></div>
+
+    <script src="index.js"></script>
 </body>
 
 </html>

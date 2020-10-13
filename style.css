@@ -9,16 +9,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f2f5f6;
-    height: 100px;
+    flex-wrap: wrap;
+    background-color: #f2f5f6;    
+    padding: 0.8rem;
+    gap: 1rem;
+}
+
+.search-box {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .input {
     border: 0;
     border-left: 2px solid black;
-    height: 40px;
-    width: 300px;
-    margin-right: 1rem;
+    height: 35px;
+    width: 500px;
+    margin: 1rem;
     text-align: center;
     outline: none;
     background-color: #f2f5f6;
@@ -28,15 +37,10 @@
     cursor: pointer;
     border: 0;
     color: #fff;
-    height: 40px;
-    width: 120px;
-    font-size: 1rem;
-    margin: 0 0.6rem;
+    height: 35px;
+    width: 140px;
+    font-size: 1rem;    
     transition: .4s;
-}
-
-.container #add:hover {
-    background-color: rgb(41, 154, 11, 0.6);
 }
 
 .list {
@@ -47,16 +51,23 @@
     margin-top: 2rem;
 }
 
-.list p {
+.item {
     width: 90vw;
-    display: grid;
-    grid-template-columns: 8fr 1fr 1fr;
+    display: grid;    
     align-items: center;
+    grid-template-columns: 6fr 1fr 1fr;        
     border-left: 4px solid rgb(14, 15, 4);
     background-color: #f2f5f6;
-    margin-bottom: 1.4rem;
-    padding: 0.6rem;
+    margin-bottom: 1rem;
     font-size: 1.2rem;
+    justify-content: space-between;
+}
+
+.item p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.6rem 0;
 }
 
 .save {
@@ -67,25 +78,24 @@
     background-color: rgb(41, 154, 11, 0.6);
 }
 
-.update {
+.update, .update-item, .save-item {
     background-color: #167edf;
 }
 
-.update:hover {
+.update:hover, .update-item:hover, .save-item:hover {
     background-color: rgb(22, 126, 223, 0.6);
 }
 
-.delete {
+.delete, .delete-item {
     background-color: #eb2e15;
 }
 
-.delete:hover {
+.delete:hover, .delete-item:hover {
     background-color: rgb(235, 46, 21, 0.6);
 }
 
 .dark {
     background-color: #232526;
-    margin-left: 3rem;
 }
 
 .dark:hover {
@@ -100,7 +110,7 @@
     background-color: #414345;
 }
 
-.dark-mode-list>p {
+.dark-mode-list .item {
     background-color: #232526;
     color: #fff;
 }

@@ -1,13 +1,18 @@
 let list = JSON.parse(localStorage.getItem('favorites')) || [];
+let dark = document.querySelector('.dark');
+let deleteData = document.querySelector('.delete')
+let input = document.querySelector('.input');
+let btn = document.querySelector('.save');
 
-document.querySelector('.input').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') createItem()
-    document.querySelector('.add').addEventListener('click', createItem)
-})
+input.onkeypress = (e) => (e.key === 'Enter') ? createItem() : createItem
+btn.onclick = () => createItem()
+deleteData.onclick = () => deleteSavedData()
+dark.onclick = () => darkMode()
 
-document.querySelector('.local').addEventListener('click', showSavedData);
-document.querySelector('.delete').addEventListener('click', deleteSavedData);
-document.querySelector('.dark').addEventListener('click', darkMode);
+showSavedData();
+searchItem();
+
+if (localStorage.getItem('isDarkMode') === 'true') darkMode()
 
 //CRUD
 function createItem() {
@@ -27,21 +32,34 @@ function createItem() {
 function renameItem(id) {
     list.map(item => {
         if (item.id != id) return
+        document.querySelector('.list').innerHTML = ""
         createRenameElement(item)
     })
+
 }
 
 function updateAll() {
     document.querySelector('.list').innerHTML = ""
-    list.map(item => createElements(item))    
+    list.map(item => createElements(item))
+    saveLocalStorage()
 }
 
 function deleteItem(id) {
     let array = list.filter(item => item.id != id)
     list = array;
     updateAll()
+    saveLocalStorage()
 }
 
+function searchItem() {
+    document.querySelector('.search').addEventListener('input', (e) => {
+        let inputValue = (e.target.value.toLowerCase().trim());
+        let filteredValues = list.filter(item => item.name.toLowerCase().includes(inputValue))
+
+        document.querySelector('.list').innerHTML = ""
+        filteredValues.map(item => createElements(item))
+    })
+}
 //Local Storage
 function saveLocalStorage() {
     localStorage.setItem('favorites', JSON.stringify(list))
@@ -58,7 +76,8 @@ function deleteSavedData() {
 }
 
 // Utils Functions
-function createElements(item) {
+function createElements({ id, name }) {
+    let div = document.createElement('div')
     let p = document.createElement('p')
     let renameBtn = document.createElement('button');
     let deleteBtn = document.createElement('button');
@@ -66,32 +85,38 @@ function createElements(item) {
     renameBtn.textContent = 'Rename';
     deleteBtn.textContent = 'Delete';
 
-    renameBtn.classList.add('btn', 'update')
-    deleteBtn.classList.add('btn', 'delete')
+    renameBtn.classList.add('btn', 'update-item')
+    deleteBtn.classList.add('btn', 'delete-item')
 
-    renameBtn.onclick = () => renameItem(item.id)
-    deleteBtn.onclick = () => deleteItem(item.id)
-    
-    p.textContent = item.name;
-    p.append(renameBtn, deleteBtn)
-    document.querySelector('.list').appendChild(p)
+    renameBtn.onclick = () => renameItem(id)
+    deleteBtn.onclick = () => deleteItem(id)
+
+    p.textContent = name;
+    div.classList.add('item')
+    div.append(p, renameBtn, deleteBtn)
+    document.querySelector('.list').append(div)
 }
 
-function createRenameElement(item) {
+function createRenameElement({ id, name }) {
     let input = document.createElement('input');
     let btn = document.createElement('button');
     let div = document.createElement('div');
 
-    input.value = item.name;
+    input.value = name;
     input.classList.add('input')
 
-    btn.classList.add('btn', 'save')
+    btn.classList.add('btn', 'save-item')
     btn.textContent = 'Salvar';
 
-    btn.onclick = () => saveUpdate(item.id, input.value);
 
     div.append(input, btn)
     document.querySelector('.list').append(div)
+    input.focus()
+
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') saveUpdate(id, input.value);
+        btn.onclick = () => saveUpdate(id, input.value);
+    })
 }
 
 function saveUpdate(id, value) {
@@ -102,8 +127,24 @@ function saveUpdate(id, value) {
     updateAll()
 }
 
+//Dark Mode
 function darkMode() {
-    document.querySelector('.page-header').classList.toggle('dark-mode-header')
-    document.querySelector('body').classList.toggle('dark-mode-body')    
-    document.querySelector('.list').classList.toggle('dark-mode-list')    
+    let pageHeader = document.querySelector('.page-header');
+
+    pageHeader.classList.contains('dark-mode-header') ?
+        disableDarkMode() : enableDarkMode()
+}
+
+function enableDarkMode() {
+    document.querySelector('.page-header').classList.add('dark-mode-header')
+    document.querySelector('body').classList.add('dark-mode-body')
+    document.querySelector('.list').classList.add('dark-mode-list')
+    localStorage.setItem('isDarkMode', true);
+}
+
+function disableDarkMode() {
+    document.querySelector('.page-header').classList.remove('dark-mode-header')
+    document.querySelector('body').classList.remove('dark-mode-body')
+    document.querySelector('.list').classList.remove('dark-mode-list')
+    localStorage.setItem('isDarkMode', false);
 }
