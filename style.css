@@ -1,25 +1,12 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
 .page-header {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    background-color: #f2f5f6;    
+    background-color: #f2f5f6;
     padding: 0.8rem;
     gap: 1rem;
-}
-
-.search-box {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
 }
 
 .input {
@@ -39,36 +26,58 @@
     color: #fff;
     height: 35px;
     width: 140px;
-    font-size: 1rem;    
-    transition: .4s;
+    font-size: 1rem;
+}
+
+.search-block {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-block select {
+    cursor: pointer;
+    background: #f2f5f6;
+    height: 35px;
+    width: 150px;
+    border: 0;
+    outline: 0;
+    text-align-last: center;
 }
 
 .list {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
     align-items: center;
+    justify-items: center;
     margin-top: 2rem;
 }
 
 .item {
-    width: 90vw;
-    display: grid;    
+    display: grid;
     align-items: center;
-    grid-template-columns: 6fr 1fr 1fr;        
+    justify-items: center;
+    grid-template-columns: 400px 1fr 1fr 1fr;
     border-left: 4px solid rgb(14, 15, 4);
     background-color: #f2f5f6;
     margin-bottom: 1rem;
     font-size: 1.2rem;
-    justify-content: space-between;
+    transition: .4s;
 }
 
-.item p {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.6rem 0;
+.icon {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
 }
+
+.icon:hover {
+    opacity: 0.6;
+}
+
+/* Buttons */
 
 .save {
     background-color: #299a0b;
@@ -78,20 +87,24 @@
     background-color: rgb(41, 154, 11, 0.6);
 }
 
-.update, .update-item, .save-item {
+.update {
     background-color: #167edf;
 }
 
-.update:hover, .update-item:hover, .save-item:hover {
+.update:hover {
     background-color: rgb(22, 126, 223, 0.6);
 }
 
-.delete, .delete-item {
+.delete {
     background-color: #eb2e15;
 }
 
-.delete:hover, .delete-item:hover {
+.delete:hover {
     background-color: rgb(235, 46, 21, 0.6);
+}
+
+.finished-item {
+    background-color: #64e758;
 }
 
 .dark {
@@ -113,4 +126,10 @@
 .dark-mode-list .item {
     background-color: #232526;
     color: #fff;
+}
+
+@media (max-width: 1100px) {    
+    .list {
+        grid-template-columns: 1fr;
+    }
 }
