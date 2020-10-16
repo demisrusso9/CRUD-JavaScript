@@ -103,8 +103,13 @@
     background-color: rgb(235, 46, 21, 0.6);
 }
 
-.finished-item {
-    background-color: #64e758;
+.item-done {
+    background-color: #64e758 !important;    
+}
+
+.item-done-dark {
+    background-color: #64e758 !important;
+    color: #000 !important;
 }
 
 .dark {
@@ -123,7 +128,7 @@
     background-color: #414345;
 }
 
-.dark-mode-list .item {
+.dark-mode-items {
     background-color: #232526;
     color: #fff;
 }

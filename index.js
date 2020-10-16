@@ -20,28 +20,28 @@ if (localStorage.getItem('isDarkMode') === 'true') darkMode()
 function createItem() {
   let input = document.querySelector('.input');
 
-  if (!input.value.trim()) return;
+  if (!input.value.trim()) return alert('Não deixe o campo vazio')
+  if (existsInArray(input.value)) return alert('Item já existente na lista, tente procurar com a busca')
 
   let obj = { id: Math.random() + 1, name: input.value, done: false }
   list.push(obj)
 
   input.value = "";
-  input.focus()
   updateAll()
   saveLocalStorage()
 }
 
 function renameItem(id) {
   list.map(item => {
-    if (item.id != id) return
-    document.querySelector('.list').innerHTML = ""
-    createRenameElement(item)
+    if (item.id == id) {
+      clearListView()
+      createRenameElement(item)
+    }
   })
-
 }
 
 function updateAll() {
-  document.querySelector('.list').innerHTML = ""
+  clearListView()
   list.map(item => createElements(item))
   saveLocalStorage()
 }
@@ -55,11 +55,13 @@ function deleteItem(id) {
 
 //Search
 function searchItem() {
-  document.querySelector('.search').addEventListener('input', (e) => {
-    let inputValue = (e.target.value.toLowerCase().trim());
-    let filteredValues = list.filter(item => item.name.toLowerCase().includes(inputValue))
+  let search = document.querySelector('.search');
 
-    document.querySelector('.list').innerHTML = ""
+  search.addEventListener('input', (e) => {
+    let value = (e.target.value.toLowerCase().trim());
+    let filteredValues = list.filter(item => item.name.toLowerCase().includes(value))
+
+    clearListView()
     filteredValues.map(item => createElements(item))
   })
 }
@@ -71,7 +73,7 @@ function selectOption() {
   let done = document.querySelector('option[name="done"]').value;
 
   select.addEventListener('change', (e) => {
-    document.querySelector('.list').innerHTML = ""
+    clearListView()
     let option = e.target.value;
 
     if (option === all) updateAll()
@@ -81,10 +83,10 @@ function selectOption() {
 }
 
 function itemDone(id) {
-  list.map((item, i) => {
-    if (item.id === id) list[i] = { ...list[i], done: true }
-  })
+  let item = document.querySelectorAll('.item');
+  item.forEach(element => element.addEventListener('click', () => element.classList.add('item-done')))
 
+  list.map((item, i) => (item.id === id) ? list[i] = { ...list[i], done: true } : '')
   saveLocalStorage()
 }
 
@@ -98,65 +100,84 @@ function showSavedData() {
 }
 
 function deleteSavedData() {
-  updateAll()
-  list.filter(item => deleteItem(item.id))
-  localStorage.clear();
+  if (list.length === 0) {
+    alert('Não existe itens na lista para deletar!')
+    return;
+  }
+
+  if (confirm('Tem certeza que gostaria de deletar todos os itens na lista?')) {
+    clearListView()
+    list.filter(item => deleteItem(item.id))
+    localStorage.removeItem('favorites');
+  }
 }
 
 // Utils Functions
-function createElements({ id, name }) {
-  let div = document.createElement('div')
+function createElements({ id, name, done }) {
+  let icons = createIcons(id);
+  let div = itemsContainsDarkMode(done);
   let p = document.createElement('p')
+
+  p.textContent = name;
+
+  div.append(p, ...icons)
+  document.querySelector('.list').append(div)
+}
+
+function createIcons(id) {
   let doneIcon = document.createElement('img');
   let renameIcon = document.createElement('img');
   let deleteIcon = document.createElement('img');
 
-  doneIcon.setAttribute('src', "assets/icons/done.png")
-  renameIcon.setAttribute('src', "assets/icons/edit.png")
-  deleteIcon.setAttribute('src', "assets/icons/delete.png")
+  doneIcon.setAttribute('src', "assets/icons/done.png");
+  renameIcon.setAttribute('src', "assets/icons/edit.png");
+  deleteIcon.setAttribute('src', "assets/icons/delete.png");
 
-  doneIcon.classList.add('icon')
-  renameIcon.classList.add('icon')
-  deleteIcon.classList.add('icon')
+  doneIcon.classList.add('icon');
+  renameIcon.classList.add('icon');
+  deleteIcon.classList.add('icon');  
 
-  doneIcon.onclick = () => itemDone(id)
-  renameIcon.onclick = () => renameItem(id)
-  deleteIcon.onclick = () => deleteItem(id)
+  doneIcon.onclick = () => itemDone(id);
+  renameIcon.onclick = () => renameItem(id);
+  deleteIcon.onclick = () => deleteItem(id);
 
-  p.textContent = name;
-  div.classList.add('item')
-  div.append(p, doneIcon, renameIcon, deleteIcon)
-  document.querySelector('.list').append(div)
+  return [doneIcon, renameIcon, deleteIcon];
 }
-
 
 function createRenameElement({ id, name }) {
   let input = document.createElement('input');
-  let btn = document.createElement('button');
+  let icon = document.createElement('img');
   let div = document.createElement('div');
 
   input.value = name;
   input.classList.add('input')
 
-  btn.classList.add('btn', 'save-item')
-  btn.textContent = 'Salvar';
+  icon.setAttribute('src', "assets/icons/edit.png")
+  icon.classList.add('icon')
 
-  div.append(input, btn)
+  div.classList.add('search-block')
+  div.append(input, icon)
   document.querySelector('.list').append(div)
   input.focus()
 
   input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') saveUpdate(id, input.value);
-    btn.onclick = () => saveUpdate(id, input.value);
+    e.key === 'Enter' ? saveUpdate(id, input.value) : icon.onclick = () => saveUpdate(id, input.value);
   })
 }
 
 function saveUpdate(id, value) {
-  list.map((item, i) => {
-    if (item.id === id) list[i] = { id, name: value, done: false }
-  })
+  if (existsInArray(value)) return alert('Valor já existe na lista')
 
+  list.map((item, i) => (item.id === id) ? list[i] = { ...list[i], name: value } : '')
   updateAll()
+}
+
+function clearListView() {
+  document.querySelector('.list').textContent = "";
+}
+
+function existsInArray(value) {
+  return list.some(item => item.name.toLowerCase() === value.toLowerCase());
 }
 
 //Dark Mode
@@ -168,15 +189,41 @@ function darkMode() {
 }
 
 function enableDarkMode() {
+  let item = document.querySelectorAll('.item');
+
   document.querySelector('.page-header').classList.add('dark-mode-header')
   document.querySelector('body').classList.add('dark-mode-body')
-  document.querySelector('.list').classList.add('dark-mode-list')
+
+  item.forEach(el => {
+    el.classList.add('dark-mode-items');
+    el.classList.contains('item-done') ? el.classList.add('item-done-dark') : '';
+  })
+
   localStorage.setItem('isDarkMode', true);
 }
 
 function disableDarkMode() {
+  let item = document.querySelectorAll('.item');
+
   document.querySelector('.page-header').classList.remove('dark-mode-header')
   document.querySelector('body').classList.remove('dark-mode-body')
-  document.querySelector('.list').classList.remove('dark-mode-list')
+
+  item.forEach(el => {
+    el.classList.remove('dark-mode-items')
+    el.classList.contains('item-done') ? el.classList.remove('item-done-dark') : '';
+  })
+
   localStorage.setItem('isDarkMode', false);
+}
+
+function itemsContainsDarkMode(done) {
+  let div = document.createElement('div');
+
+  let pageHeader = document.querySelector('.page-header');
+  pageHeader.classList.contains('dark-mode-header') ?
+    div.classList.add('item', 'dark-mode-items') : div.classList.add('item')
+
+  if (done) div.classList.add('item-done')
+
+  return div;
 }
