@@ -24,7 +24,7 @@ function createItem() {
   if (existsInArray(input.value)) return alert('Item já existente na lista, tente procurar com a busca')
 
   let obj = { id: Math.random() + 1, name: input.value, done: false }
-  list.push(obj)
+  list.unshift(obj)
 
   input.value = "";
   updateAll()
@@ -135,7 +135,7 @@ function createIcons(id) {
 
   doneIcon.classList.add('icon');
   renameIcon.classList.add('icon');
-  deleteIcon.classList.add('icon');  
+  deleteIcon.classList.add('icon');
 
   doneIcon.onclick = () => itemDone(id);
   renameIcon.onclick = () => renameItem(id);

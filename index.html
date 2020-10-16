@@ -10,15 +10,15 @@
 </head>
 
 <body>
-    <header class="page-header">
+    <header class="page-header container">
         <input class="input description" type="text" placeholder="Descrição" autofocus>
-
-        <button class="btn save">Adicionar</button>
-        <button class="btn delete">Excluir dados</button>
-        <button class="btn dark">Modo Escuro</button>
-    </header>
-
-    <div class="search-block">
+        
+        <div class="icons">
+            <img src="assets/icons/add.png" class="icon save">
+            <img src="assets/icons/delete-all.png" class="icon delete">
+            <img src="assets/icons/dark-mode.png" class="icon dark">
+        </div>
+    
         <input class="input search" type="text" placeholder="Buscar">
 
         <select id="selection">
@@ -27,7 +27,7 @@
             <option name="todo" value="todo">A fazer</option>
             <option name="done" value="done">Feito</option>
         </select>
-    </div>
+    </header>
 
     <div class="list"></div>
 
