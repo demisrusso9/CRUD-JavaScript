@@ -1,6 +1,6 @@
 ### Todo List
 
-Fiz isso usando somente `HTML, CSS e JavaScript `. Isso foi por volta da metade 2020. Foi um treinamento para fazer com ReactJs.
+Fiz isso usando somente `HTML, CSS e JavaScript`. Isso foi por volta da metade 2020. Foi um treinamento para fazer com ReactJs.
 
 - [x] CRUD
 - [x] Busca
